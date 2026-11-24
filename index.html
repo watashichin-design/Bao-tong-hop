@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head><style>
@@ -104,6 +105,16 @@ button, a { max-width: 100% !important; }
 .price-row .price .big, .price-row .price b { font-size:17px !important; }
 .price-row .price span, .price-row .price small { font-size:11px !important; }
 </style>
+
+<style>
+.prices { display:flex !important; gap:6px !important; padding:0 10px !important; overflow:visible !important; flex-wrap:nowrap !important; }
+.prices > a { flex:1 1 0 !important; min-width:0 !important; width:0 !important; display:block !important; }
+.prices .price { min-width:0 !important; width:100% !important; padding:10px 6px !important; border-radius:14px !important; }
+.prices .price small { font-size:10px !important; white-space:nowrap !important; }
+.prices .price b { font-size:17px !important; white-space:nowrap !important; letter-spacing:-0.5px !important; }
+.prices .price span { font-size:10px !important; white-space:nowrap !important; display:block !important; }
+.prices .price div { font-size:10px !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; }
+</style>
 </head>
 <body>
 <header>
@@ -198,7 +209,7 @@ async function loadPrice(){
   const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,bitcoin,ethereum&vs_currencies=usd,vnd&include_24hr_change=true');
   const j=await r.json();
   const fmt=(v)=>'$'+Number(v).toLocaleString('en-US',{maximumFractionDigits:v<1?4:0});
-  const fmtVnd=(v)=>Number(v).toLocaleString('vi-VN')+' đ';
+  const fmtVnd=(v)=>{ v=Number(v); if(v>=1e9) return (v/1e9).toFixed(2).replace('.',',')+' tỷ đ'; if(v>=1e6) return (v/1e6).toFixed(1).replace('.',',')+' tr đ'; return v.toLocaleString('vi-VN')+' đ'; };
   const set=(idP,idV,idC,coin)=>{ const c=j[coin]; if(!c) return; document.getElementById(idP).textContent=fmt(c.usd); document.getElementById(idV).textContent=fmtVnd(c.vnd); const ch=c.usd_24h_change; const el=document.getElementById(idC); el.textContent=(ch>=0?'▲ +':'▼ ')+ch.toFixed(2)+'% 24h'; el.className=ch>=0?'up':'down'; };
   set('piPrice','piVnd','piChange','pi-network'); set('btcPrice','btcVnd','btcChange','bitcoin'); set('ethPrice','ethVnd','ethChange','ethereum');
  }catch(e){
