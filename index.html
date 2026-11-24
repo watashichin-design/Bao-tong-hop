@@ -288,7 +288,8 @@ function addNews(){
   if(!title||!desc){ alert('Bạn chưa ghi tiêu đề hoặc nội dung!'); return; }
   const cat=document.getElementById('fCat').value;
   const tagMap={pi:'Pi','cong-nghe':'Công nghệ','doi-song':'Đời sống','thoi-su':'Thời sự'};
-  const n={cat:cat,tag:tagMap[cat],time:'Vừa đăng • Tin của bạn',title:title,desc:desc,img:document.getElementById('fImg').value.trim()||'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&q=80',src:document.getElementById('fSrc').value.trim()||'Bạn tự viết',mine:true};
+  let finalTitle=title, finalDesc=desc; if(title.length>100 && desc.length<50){ finalTitle=title.slice(0,80)+'...'; finalDesc=title.slice(80)+'\n\n'+desc; }
+  const n={cat:cat,tag:tagMap[cat],time:'Vừa đăng • Tin của bạn',title:finalTitle,desc:finalDesc,img:document.getElementById('fImg').value.trim()||'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&q=80',src:document.getElementById('fSrc').value.trim()||'Bạn tự viết',mine:true};
   const list=getMyNews(); list.unshift(n); saveMyNews(list);
   document.getElementById('fTitle').value=''; document.getElementById('fDesc').value=''; document.getElementById('fImg').value=''; document.getElementById('fSrc').value='';
   document.getElementById('postForm').style.display='none';
