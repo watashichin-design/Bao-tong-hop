@@ -52,7 +52,7 @@ header p{font-size:11px;letter-spacing:1px;opacity:.9;margin-top:3px}
 .tag{display:inline-block;background:#ffeef0;color:#c00;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800}
 .time{font-size:13px;color:#888;margin-left:8px}
 .card h2{font-size:21px;line-height:1.3;margin:10px 0 6px}
-.card p{color:#555;font-size:14px;line-height:1.5}
+.card p{color:#555;font-size:14px;line-height:1.5;overflow-wrap:anywhere;word-break:break-word}
 .meta{margin-top:10px;font-size:12px;color:#999}
 nav{position:fixed;z-index:5;left:12px;right:12px;bottom:12px;background:#111;border-radius:22px;display:flex;justify-content:space-around;padding:10px 4px;z-index:20}
 nav button{background:none;border:0;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
@@ -123,7 +123,8 @@ nav button.active{color:#ffeb3b}
 <button data-cat="thoi-su"><span>📰</span>Thời sự</button>
 </nav>
 <script>
-const news=[
+const news=[<!-- DÁN TIN MỚI CỦA BẠN VÀO NGAY DƯỚI DÒNG NÀY -->
+{cat:'tech',tag:'Công nghệ',time:'Vừa đăng • Tin của bạn',title:'Máy tính lượng tử',desc:'Từ năm 2030 đến năm 2035, có thể xuất hiện máy tính lượng tử có khả năng phá vỡ mật mã hiện tại, IOSCO đã phát đi cảnh báo\n\nKhám phá thêm thông tin quan trọng về SoSoValue:\nhttps://sosovalue.com/shares/I76W8F',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80',src:'Bạn tự viết',link:'https://sosovalue.com/shares/I76W8F'},
 {cat:'pi',tag:'Pi',time:'2 giờ trước',title:'Pioneer Việt Nam trao đổi hàng bằng Pi ngày càng sôi động',desc:'Nhiều cửa hàng, quán cà phê tại TP.HCM, Hà Nội bắt đầu chấp nhận thanh toán bằng Pi. Cộng đồng Pioneer cho rằng đây là tín hiệu tích cực cho hệ sinh thái Pi.',img:'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=900&q=80',src:'Báo Tổng Hợp'},
 {cat:'pi',tag:'Pi',time:'4 giờ trước',title:'Giá Pi hôm nay: Pioneer nên giữ hay bán?',desc:'Giá Pi biến động nhẹ trong 24h qua. Các chuyên gia khuyên Pioneer mới nên tìm hiểu kỹ hệ sinh thái, tránh bán tháo khi thị trường biến động.',img:'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=900&q=80',src:'Báo Tổng Hợp'},
 {cat:'cong-nghe',tag:'Công nghệ',time:'1 giờ trước',title:'Bitcoin vượt mốc mới, thị trường crypto sôi động trở lại',desc:'Bitcoin tiếp tục tăng mạnh nhờ dòng tiền từ các quỹ ETF. Ethereum cũng tăng theo, nhiều altcoin bật xanh.',img:'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=900&q=80',src:'Báo Tổng Hợp'},
@@ -298,8 +299,9 @@ function addNews(){
 function showMyNews(){ curCat='all'; keyword=''; const list=document.getElementById('list'); render(); window.scrollTo({top:300,behavior:'smooth'}); alert('Tin có chữ "Tin của bạn" là tin bạn tự đăng. Tin không có chữ đó là tin mẫu, bạn có thể xóa tin mẫu bằng cách nhắn mình.'); }
 function copyMyNews(idx){
   const list=getMyNews(); const n=list[idx];
-  const code=JSON.stringify(n);
-  navigator.clipboard.writeText(code).then(()=>alert('Đã copy code! Gửi code này cho mình để mình gắn vĩnh viễn lên web cho mọi người cùng thấy.'));
+  const safe=(s)=> (s||'').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+  const code="{cat:'"+n.cat+"',tag:'"+n.tag+"',time:'Vừa đăng • Tin của bạn',title:'"+safe(n.title)+"',desc:'"+safe(n.desc)+"',img:'"+(n.img||'')+"',src:'"+(n.src||'Bạn tự viết')+"',link:'"+(n.link||'')+"'},";
+  navigator.clipboard.writeText(code).then(()=>alert('Đã copy đủ '+n.desc.length+' chữ! Bài của bạn dài bao nhiêu nó copy bấy nhiêu, không bị cắt. Giờ bạn vào GitHub, dán vào chỗ <!-- DÁN TIN MỚI --> là xong.'));
 }
 // Gộp tin của bạn lên đầu khi render
 const _origRender = render;
@@ -345,7 +347,7 @@ render(); loadPrice(); setInterval(loadPrice,60000);
 #reader img{width:100%;height:260px;object-fit:cover}
 #reader .rbody{padding:16px}
 #reader h2{font-size:24px;line-height:1.35;margin:10px 0}
-#reader p{font-size:16px;line-height:1.7;color:#333;margin-bottom:12px;white-space:pre-line}
+#reader p{font-size:16px;line-height:1.7;color:#333;margin-bottom:12px;white-space:pre-line;overflow-wrap:anywhere;word-break:break-word;max-width:100%}
 .closeBtn{position:fixed;top:12px;left:12px;background:#111;color:#fff;border:0;padding:10px 14px;border-radius:999px;font-weight:800;z-index:101}
 </style>
 <button class="closeBtn" id="closeReader" onclick="closeReader()" style="display:none">← Quay lại</button>
@@ -356,7 +358,7 @@ function openReader(n){
   document.getElementById('rTag').textContent=n.tag;
   document.getElementById('rTime').textContent=n.time;
   document.getElementById('rTitle').textContent=n.title;
-  document.getElementById('rDesc').textContent=n.desc;
+  document.getElementById('rDesc').innerHTML=n.desc.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" style="color:#d32f2f;word-break:break-all">$1</a>');
   document.getElementById('rSrc').textContent='Nguồn: '+n.src;
   document.getElementById('reader').style.display='block';
   document.getElementById('closeReader').style.display='block';
