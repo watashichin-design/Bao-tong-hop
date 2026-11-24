@@ -60,6 +60,12 @@ nav button span{font-size:22px}
 nav button.active{color:#ffeb3b}
 .empty{text-align:center;padding:20px;color:#777;display:none}
 </style>
+
+<style>
+.card p, .reader p, #rDesc { white-space: pre-wrap !important; word-break: break-word !important; overflow-wrap: break-word !important; max-width: 100% !important; overflow-x: hidden !important; }
+.card, .card-body, .reader .rbody { overflow-x: hidden !important; max-width: 100vw !important; }
+.card h2, .reader h2 { word-break: break-word !important; overflow-wrap: break-word !important; }
+</style>
 </head>
 <body>
 <header>
@@ -124,7 +130,20 @@ nav button.active{color:#ffeb3b}
 </nav>
 <script>
 const news=[<!-- DÁN TIN MỚI CỦA BẠN VÀO NGAY DƯỚI DÒNG NÀY -->
-{cat:'tech',tag:'Công nghệ',time:'Vừa đăng • Tin của bạn',title:'Máy tính lượng tử',desc:'Từ năm 2030 đến năm 2035, có thể xuất hiện máy tính lượng tử có khả năng phá vỡ mật mã hiện tại, IOSCO đã phát đi cảnh báo\n\nKhám phá thêm thông tin quan trọng về SoSoValue:\nhttps://sosovalue.com/shares/I76W8F',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80',src:'Bạn tự viết',link:'https://sosovalue.com/shares/I76W8F'},
+{cat:'tech',tag:'Công nghệ',time:'Vừa đăng • Tin của bạn',title:'Máy tính lượng tử',desc:'Từ năm 2030 đến năm 2035, có thể xuất hiện máy tính lượng tử có khả năng phá vỡ mật mã hiện tại, IOSCO đã phát đi cảnh báo
+
+Odaily
+2026-11-24
+#Bitcoin
+BTC
+-3.42%
+
+IOSCO cảnh báo rằng máy tính lượng tử có khả năng phá vỡ mật mã hiện tại có thể xuất hiện vào khoảng năm 2030 đến 2035. Báo cáo của IOSCO chỉ ra rằng blockchain đối mặt với thách thức chuyển đổi phức tạp nhất, bởi vì mật mã nằm ở trung tâm của blockchain, việc nâng cấp đòi hỏi hành động phối hợp trên toàn bộ mạng lưới phi tập trung.
+
+Các nhà phát triển Bitcoin đang đánh giá loại đầu ra P2QRH trong BIP-360, phương án chuyển đổi từng giai đoạn được Jameson Lopp đồng soạn thảo trong BIP-361, cũng như chữ ký SPHINCS+ dựa trên SHA-256 do Blockstream phát triển. IOSCO cho rằng thời gian chuẩn bị cần thiết cho quá trình chuyển đổi khiến vấn đề mang tính cấp bách trong ngắn hạn.
+
+Khám phá thêm thông tin quan trọng về SoSoValue:
+https://sosovalue.com/shares/I76W8F',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80',src:'Bạn tự viết',link:'https://sosovalue.com/shares/I76W8F'},
 {cat:'pi',tag:'Pi',time:'2 giờ trước',title:'Pioneer Việt Nam trao đổi hàng bằng Pi ngày càng sôi động',desc:'Nhiều cửa hàng, quán cà phê tại TP.HCM, Hà Nội bắt đầu chấp nhận thanh toán bằng Pi. Cộng đồng Pioneer cho rằng đây là tín hiệu tích cực cho hệ sinh thái Pi.',img:'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=900&q=80',src:'Báo Tổng Hợp'},
 {cat:'pi',tag:'Pi',time:'4 giờ trước',title:'Giá Pi hôm nay: Pioneer nên giữ hay bán?',desc:'Giá Pi biến động nhẹ trong 24h qua. Các chuyên gia khuyên Pioneer mới nên tìm hiểu kỹ hệ sinh thái, tránh bán tháo khi thị trường biến động.',img:'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=900&q=80',src:'Báo Tổng Hợp'},
 {cat:'cong-nghe',tag:'Công nghệ',time:'1 giờ trước',title:'Bitcoin vượt mốc mới, thị trường crypto sôi động trở lại',desc:'Bitcoin tiếp tục tăng mạnh nhờ dòng tiền từ các quỹ ETF. Ethereum cũng tăng theo, nhiều altcoin bật xanh.',img:'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=900&q=80',src:'Báo Tổng Hợp'},
@@ -299,9 +318,9 @@ function addNews(){
 function showMyNews(){ curCat='all'; keyword=''; const list=document.getElementById('list'); render(); window.scrollTo({top:300,behavior:'smooth'}); alert('Tin có chữ "Tin của bạn" là tin bạn tự đăng. Tin không có chữ đó là tin mẫu, bạn có thể xóa tin mẫu bằng cách nhắn mình.'); }
 function copyMyNews(idx){
   const list=getMyNews(); const n=list[idx];
-  const safe=(s)=> (s||'').replace(/'/g,"\\'").replace(/\n/g,'\\n');
-  const code="{cat:'"+n.cat+"',tag:'"+n.tag+"',time:'Vừa đăng • Tin của bạn',title:'"+safe(n.title)+"',desc:'"+safe(n.desc)+"',img:'"+(n.img||'')+"',src:'"+(n.src||'Bạn tự viết')+"',link:'"+(n.link||'')+"'},";
-  navigator.clipboard.writeText(code).then(()=>alert('Đã copy đủ '+n.desc.length+' chữ! Bài của bạn dài bao nhiêu nó copy bấy nhiêu, không bị cắt. Giờ bạn vào GitHub, dán vào chỗ <!-- DÁN TIN MỚI --> là xong.'));
+  const esc=(s)=> (s||'').replace(/`/g,'').replace(/\\/g,'');
+  const code = "{cat:'"+n.cat+"',\n tag:'"+n.tag+"',\n title:'"+esc(n.title)+"',\n desc:`"+esc(n.desc)+"`,\n img:'"+(n.img||'')+"',\n src:'"+(n.src||'Bạn tự viết')+"',\n link:'"+(n.link||'')+"'\n},";
+  navigator.clipboard.writeText(code).then(()=>alert('Đã copy đủ '+n.desc.length+' chữ, thành '+code.split('\n').length+' dòng! Khi dán vào GitHub bạn sẽ thấy nhiều dòng, không phải 1 dòng nữa.'));
 }
 // Gộp tin của bạn lên đầu khi render
 const _origRender = render;
