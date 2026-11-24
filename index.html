@@ -48,6 +48,8 @@ nav button.active{color:#ffeb3b}
 </header>
 <div class="ticker">🔴 NÓNG: Pioneer Việt trao đổi hàng bằng Pi ngày càng sôi động • Bitcoin vượt mốc mới • iPhone mới lộ cấu hình</div>
 
+
+<div id="rssStatus" style="padding:8px 12px;font-size:12px;color:#555;background:#fff8e1">⏳ Đang lấy tin thật từ báo... (VnExpress • Tuổi Trẻ • CoinDesk)</div>
 <div style="padding:0 12px 10px;display:flex;gap:8px">
 <button onclick="document.getElementById('postForm').style.display=document.getElementById('postForm').style.display==='none'?'block':'none'" style="flex:1;background:#111;color:#fff;border:0;padding:12px;border-radius:12px;font-weight:800">✍️ Đăng tin mới</button>
 <button onclick="showMyNews()" style="background:#fff;border:1px solid #ddd;padding:12px 14px;border-radius:12px;font-weight:700">📰 Tin của tôi</button>
@@ -129,6 +131,72 @@ async function loadPrice(){
  }
 }
 
+
+// --- TIN THẬT TỪ RSS ---
+let realNews = [];
+let rssLoaded = false;
+function guessCat(title, desc){
+  const t = (title+' '+desc).toLowerCase();
+  if(t.includes('pi network')||t.includes('pioneer')||t.includes(' pi ')) return 'pi';
+  if(t.includes('bitcoin')||t.includes('crypto')||t.includes('ethereum')||t.includes('ai')||t.includes('iphone')||t.includes('công nghệ')||t.includes('công nghệ')) return 'cong-nghe';
+  if(t.includes('giá vàng')||t.includes('giá xăng')||t.includes('tiết kiệm')||t.includes('đời sống')||t.includes('gia đình')) return 'doi-song';
+  return 'thoi-su';
+}
+function tagFor(cat){ return {pi:'Pi','cong-nghe':'Công nghệ','doi-song':'Đời sống','thoi-su':'Thời sự'}[cat]||'Thời sự'; }
+function timeAgo(pubDate){
+  try{ const d=new Date(pubDate); const diff=(Date.now()-d.getTime())/60000; if(diff<60) return Math.max(1,Math.round(diff))+' phút trước'; if(diff<1440) return Math.round(diff/60)+' giờ trước'; return Math.round(diff/1440)+' ngày trước'; }catch(e){ return 'Vừa cập nhật'; }
+}
+async function fetchOneRSS(rssUrl){
+  const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
+  const res = await fetch(proxy);
+  const text = await res.text();
+  const xml = new DOMParser().parseFromString(text, 'text/xml');
+  const items = [...xml.querySelectorAll('item')].slice(0,6);
+  return items.map(it=>{
+    const title = it.querySelector('title')?.textContent||'';
+    let desc = it.querySelector('description')?.textContent||'';
+    desc = desc.replace(/<[^>]*>/g,'').trim().slice(0,220);
+    let img = '';
+    const enc = it.querySelector('enclosure');
+    if(enc) img = enc.getAttribute('url')||'';
+    if(!img){
+      const m = (it.querySelector('description')?.textContent||'').match(/src="([^"]+\.(jpg|jpeg|png|webp))"/);
+      if(m) img = m[1];
+    }
+    if(!img) img = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&q=80';
+    const link = it.querySelector('link')?.textContent||'';
+    const pub = it.querySelector('pubDate')?.textContent||'';
+    const cat = guessCat(title, desc);
+    return {cat, tag:tagFor(cat), time:timeAgo(pub)+' • Tin thật', title, desc: desc||title, img, src:'Báo gốc', link, real:true};
+  });
+}
+async function loadRealNews(){
+  const feeds = [
+    'https://vnexpress.net/rss/tin-moi-nhat.rss',
+    'https://tuoitre.vn/rss/tin-moi-nhat.rss',
+    'https://www.coindesk.com/arc/outboundfeeds/rss/',
+    'https://news.google.com/rss/search?q=Pi%20Network&hl=vi&gl=VN&ceid=VN:vi'
+  ];
+  try{
+    const results = await Promise.allSettled(feeds.map(fetchOneRSS));
+    let all = [];
+    results.forEach(r=>{ if(r.status==='fulfilled') all.push(...r.value); });
+    // Lọc trùng tiêu đề
+    const seen = new Set(); all = all.filter(n=>{ if(seen.has(n.title)) return false; seen.add(n.title); return true; });
+    if(all.length>0){
+      realNews = all.slice(0,12);
+      rssLoaded = true;
+      document.getElementById('rssStatus').innerHTML = '✅ Đang hiển thị <b>'+realNews.length+' tin thật</b> từ báo • Tin của bạn sẽ luôn ở trên cùng • Bấm vào tin để đọc trên báo gốc';
+      document.getElementById('rssStatus').style.background = '#e8f5e9';
+      render();
+    } else {
+      document.getElementById('rssStatus').innerHTML = '⚠️ Không lấy được RSS lúc này, đang hiển thị tin mẫu. Thử tải lại trang sau 1 phút.';
+    }
+  }catch(e){
+    document.getElementById('rssStatus').innerHTML = '⚠️ Không lấy được RSS, đang hiển thị tin mẫu.';
+  }
+}
+
 // --- TIN CỦA BẠN (Cách 2) ---
 function getMyNews(){ try{ return JSON.parse(localStorage.getItem('myNews')||'[]'); }catch(e){ return []; } }
 function saveMyNews(list){ localStorage.setItem('myNews', JSON.stringify(list)); }
@@ -156,7 +224,7 @@ render = function(){
   const my = getMyNews();
   // tạm chèn tin của bạn vào đầu mảng news để hiển thị
   const old = [...news];
-  news.length=0; news.push(...my, ...old);
+  news.length=0; news.push(...my, ...(rssLoaded?realNews:[]), ...old);
   _origRender();
   // thêm nút xóa + copy cho tin của bạn
   document.querySelectorAll('.card').forEach((el,i)=>{
@@ -171,6 +239,20 @@ render = function(){
 };
 function delMyNews(i){ if(!confirm('Xóa tin này?')) return; const l=getMyNews(); l.splice(i,1); saveMyNews(l); render(); }
 
+
+// Nếu là tin thật, bấm vào sẽ mở báo gốc
+document.addEventListener('click', function(e){
+  const card = e.target.closest('.card');
+  if(!card) return;
+  const title = card.querySelector('h2')?.textContent;
+  const found = [...getMyNews(), ...realNews].find(n=>n.title===title);
+  if(found && found.real && found.link){
+    e.stopPropagation();
+    window.open(found.link, '_blank');
+  }
+}, true);
+
+loadRealNews();
 render(); loadPrice(); setInterval(loadPrice,60000);
 </script>
 
