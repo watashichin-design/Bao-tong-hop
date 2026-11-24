@@ -137,7 +137,7 @@ const news=[
 let curCat='all', keyword='';
 function render(){
  const list=document.getElementById('list'); list.innerHTML='';
- const filtered=news.filter(n=>(curCat==='all'||n.cat===curCat)&&(n.title+n.desc).toLowerCase().includes(keyword.toLowerCase()));
+ const filtered=news.filter(n=>(curCat==='all'||n.cat===curCat)&&(norm(n.title+' '+n.desc+' '+n.tag).includes(norm(keyword))));
  document.getElementById('empty').style.display=filtered.length?'none':'block';
  filtered.forEach(n=>{
   const d=document.createElement('div'); d.className='card';
@@ -151,7 +151,7 @@ function setCat(c){
  render();
 }
 document.querySelectorAll('#cats button, #nav button').forEach(b=>b.onclick=()=>setCat(b.dataset.cat));
-function doSearch(){keyword=document.getElementById('q').value; render();}
+function doSearch(){keyword=document.getElementById('q').value; render(); document.getElementById('list').scrollIntoView({behavior:'smooth'}); if(keyword.trim()){ const c=document.querySelectorAll('#list .card').length; document.getElementById('rssStatus').innerHTML='🔍 Tìm "'+keyword+'" • Tìm thấy '+c+' tin • Bấm Xóa để xem lại tất cả'; } }
 document.getElementById('q').addEventListener('input',e=>{keyword=e.target.value; render();});
 async function loadPrice(){
  try{
@@ -196,6 +196,9 @@ function resetTicker(){
   document.getElementById('ticker').textContent = '🔴 NÓNG: Pioneer Việt trao đổi hàng bằng Pi ngày càng sôi động • Bitcoin vượt mốc mới • iPhone mới lộ cấu hình';
   document.getElementById('tickerForm').style.display='none';
 }
+
+
+function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d'); }
 
 // --- TIN THẬT TỪ RSS ---
 let realNews = [];
