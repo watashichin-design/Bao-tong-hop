@@ -122,29 +122,15 @@ nav button.active{color:#ffeb3b}
 <div id="list"></div>
 <div class="empty" id="empty">Không tìm thấy tin nào. Thử từ khóa khác nhé.</div>
 <nav id="nav">
-<button class="active" data-cat="all"><span>🏠</span>Trang chủ</button>
-<button data-cat="pi"><span>π</span>Pi</button>
-<button data-cat="cong-nghe"><span>📱</span>Công nghệ</button>
-<button data-cat="doi-song"><span>🏡</span>Đời sống</button>
-<button data-cat="thoi-su"><span>📰</span>Thời sự</button>
+<button class="active" data-cat="all" onclick="setCat('all')"><span>🏠</span>Trang chủ</button>
+<button data-cat="pi" onclick="setCat('pi')"><span>π</span>Pi</button>
+<button data-cat="cong-nghe" onclick="setCat('cong-nghe')"><span>📱</span>Công nghệ</button>
+<button data-cat="doi-song" onclick="setCat('doi-song')"><span>🏡</span>Đời sống</button>
+<button data-cat="thoi-su" onclick="setCat('thoi-su')"><span>📰</span>Thời sự</button>
 </nav>
 <script>
 const news=[<!-- DÁN TIN MỚI CỦA BẠN VÀO NGAY DƯỚI DÒNG NÀY -->
-  {cat:'cong-nghe',tag:'Công nghệ',time:'Vừa đăng • Tin của bạn',title:'Máy tính lượng tử',desc:'Từ năm 2030 đến năm 2035, có thể xuất hiện máy tính lượng tử có khả năng phá vỡ mật mã hiện tại, IOSCO đã phát đi cảnh báo\n\nOdaily\n2026-11-24\n#Bitcoin\nBTC\n-3.42%\nIOSCO cảnh báo rằng máy tính lượng tử có khả năng phá vỡ công nghệ mật mã hiện tại có thể xuất hiện vào khoảng năm 2030 đến 2035. Báo cáo của IOSCO chỉ ra rằng blockchain đối mặt với thách thức chuyển đổi phức tạp nhất, bởi vì mật mã nằm ở cốt lõi của blockchain, việc nâng cấp đòi hỏi hành động phối hợp trong mạng lưới phi tập trung.\nCác nhà phát triển Bitcoin đang đánh giá loại đầu ra P2MR theo BIP-360, phương án chuyển đổi từng giai đoạn được Jameson Lopp đồng soạn thảo trong BIP-361, cũng như chữ ký SHRINCS dựa trên SHA-256 do Blockstream phát triển. IOSCO cho biết thời gian chuẩn bị cần thiết cho quá trình chuyển đổi khiến vấn đề này mang tính cấp bách trong ngắn hạn.',img:'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&q=80',src:'https://www.tiktok.com/@amusicmen',link:''},
-{cat:'tech',tag:'Công nghệ',time:'Vừa đăng • Tin của bạn',title:'Máy tính lượng tử',desc:'Từ năm 2030 đến năm 2035, có thể xuất hiện máy tính lượng tử có khả năng phá vỡ mật mã hiện tại, IOSCO đã phát đi cảnh báo
-
-Odaily
-2026-11-24
-#Bitcoin
-BTC
--3.42%
-
-IOSCO cảnh báo rằng máy tính lượng tử có khả năng phá vỡ mật mã hiện tại có thể xuất hiện vào khoảng năm 2030 đến 2035. Báo cáo của IOSCO chỉ ra rằng blockchain đối mặt với thách thức chuyển đổi phức tạp nhất, bởi vì mật mã nằm ở trung tâm của blockchain, việc nâng cấp đòi hỏi hành động phối hợp trên toàn bộ mạng lưới phi tập trung.
-
-Các nhà phát triển Bitcoin đang đánh giá loại đầu ra P2QRH trong BIP-360, phương án chuyển đổi từng giai đoạn được Jameson Lopp đồng soạn thảo trong BIP-361, cũng như chữ ký SPHINCS+ dựa trên SHA-256 do Blockstream phát triển. IOSCO cho rằng thời gian chuẩn bị cần thiết cho quá trình chuyển đổi khiến vấn đề mang tính cấp bách trong ngắn hạn.
-
-Khám phá thêm thông tin quan trọng về SoSoValue:
-https://sosovalue.com/shares/I76W8F',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80',src:'Bạn tự viết',link:'https://sosovalue.com/shares/I76W8F'},
+{cat:'tech',tag:'Công nghệ',time:'Vừa đăng • Tin của bạn',title:'Máy tính lượng tử',desc:'Từ năm 2030 đến năm 2035, có thể xuất hiện máy tính lượng tử có khả năng phá vỡ mật mã hiện tại, IOSCO đã phát đi cảnh báo\n\nOdaily\n2026-11-24\n#Bitcoin\nBTC\n-3.42%\n\nIOSCO cảnh báo rằng máy tính lượng tử có khả năng phá vỡ mật mã hiện tại có thể xuất hiện vào khoảng năm 2030 đến 2035. Báo cáo của IOSCO chỉ ra rằng blockchain đối mặt với thách thức chuyển đổi phức tạp nhất, bởi vì mật mã nằm ở trung tâm của blockchain, việc nâng cấp đòi hỏi hành động phối hợp trên toàn bộ mạng lưới phi tập trung.\n\nCác nhà phát triển Bitcoin đang đánh giá loại đầu ra P2QRH trong BIP-360, phương án chuyển đổi từng giai đoạn được Jameson Lopp đồng soạn thảo trong BIP-361, cũng như chữ ký SPHINCS+ dựa trên SHA-256 do Blockstream phát triển. IOSCO cho rằng thời gian chuẩn bị cần thiết cho quá trình chuyển đổi khiến vấn đề mang tính cấp bách trong ngắn hạn.\n\nKhám phá thêm thông tin quan trọng về SoSoValue:\nhttps://sosovalue.com/shares/I76W8F',img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80',src:'Bạn tự viết',link:'https://sosovalue.com/shares/I76W8F'},
 {cat:'pi',tag:'Pi',time:'2 giờ trước',title:'Pioneer Việt Nam trao đổi hàng bằng Pi ngày càng sôi động',desc:'Nhiều cửa hàng, quán cà phê tại TP.HCM, Hà Nội bắt đầu chấp nhận thanh toán bằng Pi. Cộng đồng Pioneer cho rằng đây là tín hiệu tích cực cho hệ sinh thái Pi.',img:'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=900&q=80',src:'Báo Tổng Hợp'},
 {cat:'pi',tag:'Pi',time:'4 giờ trước',title:'Giá Pi hôm nay: Pioneer nên giữ hay bán?',desc:'Giá Pi biến động nhẹ trong 24h qua. Các chuyên gia khuyên Pioneer mới nên tìm hiểu kỹ hệ sinh thái, tránh bán tháo khi thị trường biến động.',img:'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=900&q=80',src:'Báo Tổng Hợp'},
 {cat:'cong-nghe',tag:'Công nghệ',time:'1 giờ trước',title:'Bitcoin vượt mốc mới, thị trường crypto sôi động trở lại',desc:'Bitcoin tiếp tục tăng mạnh nhờ dòng tiền từ các quỹ ETF. Ethereum cũng tăng theo, nhiều altcoin bật xanh.',img:'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=900&q=80',src:'Báo Tổng Hợp'},
