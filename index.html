@@ -93,6 +93,17 @@ button, a { max-width: 100% !important; }
 .price-row .price .big { font-size:20px !important; }
 .soso-one { width:calc(100% - 24px) !important; margin:0 12px 12px !important; display:block !important; text-align:center !important; background:#111 !important; color:#ffeb3b !important; padding:14px !important; border-radius:14px !important; font-weight:800 !important; font-size:14px !important; border:0 !important; }
 </style>
+
+<style>
+/* AN hang nut tren - duoi da co roi */
+.cat-row { display:none !important; }
+.top-cats, .cats-top { display:none !important; }
+/* Gia coin sieu nho - vua trang */
+.price-row { gap:6px !important; padding:0 10px !important; }
+.price-row .price, .price-row > div { padding:8px 6px !important; border-radius:14px !important; }
+.price-row .price .big, .price-row .price b { font-size:17px !important; }
+.price-row .price span, .price-row .price small { font-size:11px !important; }
+</style>
 </head>
 <body>
 <header>
@@ -129,9 +140,7 @@ button, a { max-width: 100% !important; }
 <p style="font-size:12px;color:#666;margin-top:10px">Muốn cho <b>mọi người</b> cũng thấy tin này? Bấm <b>Đăng tin</b> xong, bấm nút <b>Copy code tin</b> ở dưới tin của bạn, gửi code đó cho mình, mình gắn vĩnh viễn vào web cho bạn.</p>
 </div>
 <div class="search"><input id="q" placeholder="Tìm tin... vd: Pi, Bitcoin, ETH"><button onclick="doSearch()">Tìm trong Báo</button><button onclick="doGoogleSearch()" style="background:#111;color:#fff;border:0;padding:12px 14px;border-radius:14px;font-weight:800;cursor:pointer;white-space:nowrap">Tìm trên Google ↗</button></div>
-<div class="cats" id="cats">
-<button class="active" data-cat="all">Tất cả</button><button data-cat="pi">Pi</button><button data-cat="cong-nghe">Công nghệ</button><button data-cat="doi-song">Đời sống</button><button data-cat="thoi-su">Thời sự</button>
-</div>
+<!-- Da bo hang nut tren, dung nut duoi -->
 <div style="padding:0 12px 6px;font-size:12px;color:#666">Giá sàn quốc tế (CoinGecko / OKX) • Bấm vào từng coin để xem chi tiết trên <b>SoSoValue</b> ↗</div>
 <div class="prices">
 <a href="https://sosovalue.com" onclick="window.location.href=this.href; return false;" style="position:relative;z-index:5;display:block"  style="text-decoration:none"><div class="price"><small>π GIÁ PI</small><b id="piPrice">Đang tải...</b><span id="piChange">▲ Cập nhật...</span><div style="font-size:12px;margin-top:4px" id="piVnd"></div><div style="font-size:11px;margin-top:8px;color:#888">Giá live</div></div></a>
