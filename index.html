@@ -103,7 +103,7 @@ function render(){
  filtered.forEach(n=>{
   const d=document.createElement('div'); d.className='card';
   d.innerHTML=`<img src="${n.img}"><div class="card-body"><span class="tag">${n.tag}</span><span class="time">${n.time}</span><h2>${n.title}</h2><p>${n.desc}</p><div class="meta">Nguồn: ${n.src} • Bấm để đọc tiếp</div></div>`;
-  d.onclick=()=>alert(n.title+'\n\n'+n.desc+'\n\n(Bạn có thể thay bằng nội dung đầy đủ sau)'); list.appendChild(d);
+  d.onclick=()=>openReader(n); list.appendChild(d);
  });
 }
 function setCat(c){
@@ -172,6 +172,31 @@ render = function(){
 function delMyNews(i){ if(!confirm('Xóa tin này?')) return; const l=getMyNews(); l.splice(i,1); saveMyNews(l); render(); }
 
 render(); loadPrice(); setInterval(loadPrice,60000);
+</script>
+
+<style>
+#reader{position:fixed;inset:0;background:#fff;z-index:100;overflow-y:auto;display:none}
+#reader img{width:100%;height:260px;object-fit:cover}
+#reader .rbody{padding:16px}
+#reader h2{font-size:24px;line-height:1.35;margin:10px 0}
+#reader p{font-size:16px;line-height:1.7;color:#333;margin-bottom:12px;white-space:pre-line}
+.closeBtn{position:fixed;top:12px;left:12px;background:#111;color:#fff;border:0;padding:10px 14px;border-radius:999px;font-weight:800;z-index:101}
+</style>
+<button class="closeBtn" id="closeReader" onclick="closeReader()" style="display:none">← Quay lại</button>
+<div id="reader"><img id="rImg"><div class="rbody"><span id="rTag" class="tag"></span><span id="rTime" class="time"></span><h2 id="rTitle"></h2><p id="rDesc"></p><div id="rSrc" style="color:#888;font-size:13px;border-top:1px solid #eee;padding-top:10px"></div><div style="height:60px"></div></div></div>
+<script>
+function openReader(n){
+  document.getElementById('rImg').src=n.img;
+  document.getElementById('rTag').textContent=n.tag;
+  document.getElementById('rTime').textContent=n.time;
+  document.getElementById('rTitle').textContent=n.title;
+  document.getElementById('rDesc').textContent=n.desc;
+  document.getElementById('rSrc').textContent='Nguồn: '+n.src;
+  document.getElementById('reader').style.display='block';
+  document.getElementById('closeReader').style.display='block';
+  window.scrollTo(0,0);
+}
+function closeReader(){ document.getElementById('reader').style.display='none'; document.getElementById('closeReader').style.display='none'; }
 </script>
 </body>
 </html>
